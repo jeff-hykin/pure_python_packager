@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pure_python_packages"
+name = "pure_python_packager"
 version = "0.0.1"
 description = "Fixing python packaging, one package at a time"
 authors=[]
@@ -10,8 +10,8 @@ author_email='jeff.hykin@gmail.com'
 url='https://github.com/jeff-hykin/pure_python_packager'
 license = "MIT"
 
-[[tool.extra.pure_python_packages]]
-path = "main/pure_python_packages"
+[[tool.extra.pure_python_packager]]
+path = "main/pure_python_packager"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<3.12"
