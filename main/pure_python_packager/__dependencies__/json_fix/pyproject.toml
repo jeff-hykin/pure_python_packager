@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "json_fix"
+version = "0.5.2"
+description = "allow custom class json behavior on builtin json object"
+authors=[]
+
+[tool.extra]
+author='Jeff Hykin'
+author_email='jeff.hykin@gmail.com'
+url='https://github.com/jeff-hykin/json_fix.git'
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.12"
+
+[tool.poetry.dev-dependencies]
+twine = "3.4.1"
+"keyrings.alt" = "4.0.2"
+toml = "^0.10.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
