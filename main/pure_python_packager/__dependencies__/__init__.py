@@ -5,7 +5,10 @@ from os import remove, getcwd, makedirs, listdir, rename, rmdir, system
 from pathlib import Path
 from os.path import join, dirname
 import warnings
-  
+
+# 
+# helpers
+# 
 def make_absolute_path(to, coming_from=None):
     # if coming from cwd, its easy
     if coming_from is None:
@@ -19,9 +22,10 @@ def make_absolute_path(to, coming_from=None):
         relative_path = os.path.relpath(to, coming_from_absolute)
     return os.path.join(coming_from_absolute, relative_path)
 
-this_file = make_absolute_path(__file__)
-this_folder = dirname(this_file)
-dependency_underscore_names = [ each for each in listdir(this_folder) if basename(each)[0:2] != '__' ] # ignore double-underscore names
+def make_relative_path(*, to, coming_from=None):
+    if coming_from is None:
+        coming_from = get_cwd()
+    return os.path.relpath(to, coming_from)
 
 def path_pieces(path):
     """
@@ -45,44 +49,74 @@ def path_pieces(path):
     return [ *folders, filename, file_extension ]
 
 # 
+# globals
+# 
+this_file = make_absolute_path(__file__)
+this_folder = dirname(this_file)
+dependency_mapping_path = join(this_folder, '__dependency_mapping__.json')
+
+# 
 # find closest import path
 #
 *folders_to_this, _, _ = path_pieces(this_file)
 best_match_amount = 0
 best_import_zone_match = None
 import sys
-for each in sys.path:
-    each = make_absolute_path(each)
-    *folders, name, extension = path_pieces(each)
-    folders = [ *folders, name+extension]
+for each_import_path in sys.path:
+    each_import_path = make_absolute_path(each_import_path)
+    if not isdir(each_import_path):
+        continue
+    *folders_of_import_path, name, extension = path_pieces(each_import_path)
+    folders_of_import_path = [ *folders_of_import_path, name+extension]
     matches = 0
-    for folder_to_this, folder_to_some_import_zone in zip(folders_to_this, folders):
+    for folder_to_this, folder_to_some_import_zone in zip(folders_to_this, folders_of_import_path):
         if folder_to_this != folder_to_some_import_zone:
             break
         else:
             matches += 1
     
     if matches > best_match_amount:
-        best_import_zone_match = each
+        best_import_zone_match = each_import_path
         best_match_amount = matches
 
 # shouldn't ever happen
 if best_import_zone_match is None:
-    raise Exception(f'''Couldn't find a path to {this_file} from any of {sys.path}''')
-
+    raise Exception(f"""Couldn't find a path to {this_file} from any of {sys.path}""")
 
 # 
-# calculate path
+# import json mapping
 # 
+import json
+from os.path import join
+# ensure it exists
+if not isfile(dependency_mapping_path):
+    with open(dependency_mapping_path, 'w') as the_file:
+        the_file.write(str("{}"))
+with open(dependency_mapping_path, 'r') as in_file:
+    dependency_mapping = json.load(in_file)
+    if not isinstance(dependency_mapping, dict):
+        raise Exception(f"""\n\n\nThis file is corrupt (it should be a JSON object):{dependency_mapping_path}""")
+
+# 
+# calculate paths
+# 
+from random import random
+counter = 0
 import_strings = []
-for each in dependency_underscore_names:
-    *folders, file_name, file_extension = path_pieces(join(this_folder, each))
-    package_name = file_name+file_extension
-    # NOTE: this is where the required structure of main/package_name exists
-    path_parts = folders[best_match_amount:] + [ package_name, "main", package_name, ] 
-    if os.path.isdir(join(best_import_zone_match, *path_parts)):
+for dependency_name, dependency_info in dependency_mapping.items():
+    counter += 1
+    if dependency_name.startswith("__"):
+        raise Exception(f"""dependency names cannot start with "__", but this one does: {dependency_name}. This source of that name is in: {dependency_mapping_path}""")
+    
+    target_path = join(this_folder, dependency_info["path"])
+    relative_target_path = make_relative_path(to=target_path, coming_from=best_import_zone_match)
+    # ensure the parent folder
+    *path_parts, _, _ = path_pieces(join(relative_target_path, "_"))
+    eval_part = dependency_info.get("eval", dependency_name)
+    unique_name = f"{dependency_name}_{random()}_{counter}".replace(".","")
+    if os.path.isdir(target_path):
         if all(each.isidentifier() for each in path_parts):
-            import_strings.append(f"import {'.'.join(path_parts)} as {package_name}")
+            import_strings.append(f"import {'.'.join(path_parts)} as {unique_name};{dependency_name} = (lambda {dependency_name}: {eval_part})({unique_name})")
         else:
             warnings.warn(f"There's a dependency path that contains a name that is not acceptable as an identifier:\npath parts: {path_parts}")
     else:

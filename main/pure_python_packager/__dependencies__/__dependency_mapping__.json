@@ -1,0 +1,14 @@
+{
+    "file_system_py": {
+        "path": "file_system_py/main/file_system_py",
+        "eval": "file_system_py"
+    },
+    "super_hash": {
+        "path": "super_hash/main/super_hash",
+        "eval": "super_hash"
+    },
+    "toml": {
+        "path": "toml/toml",
+        "eval": "toml"
+    }
+}

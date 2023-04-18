@@ -1,0 +1,6 @@
+{
+    "simple_namespace": {
+        "path": "simple_namespace/main/simple_namespace",
+        "eval": "simple_namespace"
+    }
+}

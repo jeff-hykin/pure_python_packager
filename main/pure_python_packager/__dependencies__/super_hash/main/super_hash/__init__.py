@@ -1,6 +1,7 @@
 import collections
 from hashlib import md5 
 import pickle
+from .__dependencies__ import simple_namespace
 
 code = type(compile('1','','single'))
 

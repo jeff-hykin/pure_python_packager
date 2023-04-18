@@ -1,5 +1,5 @@
 import setuptools
-import toml
+from pure_python_packager.__dependencies__.toml import toml # no idea how this works (since this creates the pure_python_packager package) but it does
 
 # 
 # get the data out of the toml file
