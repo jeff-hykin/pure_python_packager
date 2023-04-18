@@ -1,17 +1,17 @@
 [tool.poetry]
-name = "YOUR_PACKAGE_NAME"
+name = "pure_python_packages"
 version = "0.0.1"
-description = "YOUR_DESCRIPTION"
+description = "Fixing python packaging, one package at a time"
 authors=[]
 
 [tool.extra]
-author='YOUR_NAME_14057'
-author_email='YOUR_EMAIL'
-url='YOUR_GIT_REPO_URL'
+author='Jeff Hykin'
+author_email='jeff.hykin@gmail.com'
+url='https://github.com/jeff-hykin/pure_python_packager'
 license = "MIT"
 
 [[tool.extra.pure_python_packages]]
-path = "main/YOUR_PACKAGE_NAME"
+path = "main/pure_python_packages"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<3.12"
@@ -19,7 +19,6 @@ python = ">=3.7,<3.12"
 [tool.poetry.dev-dependencies]
 twine = "3.4.1"
 "keyrings.alt" = "4.0.2"
-toml = "^0.10.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
