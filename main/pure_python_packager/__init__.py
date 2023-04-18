@@ -60,6 +60,8 @@ def get_original_dependency_initer():
 
 # TODO: check git subrepo command        
 def add_dependency(project_directory, url, commit_or_tag=None, module_name=None, module_path=None, extraction_eval=None):
+    # TODO: try auto-detecting project_directory using cwd and pyproject.toml
+    
     # FIXME: allow installing a specific tag
     
     *_, url_ending_name, _ = path_pieces(url)

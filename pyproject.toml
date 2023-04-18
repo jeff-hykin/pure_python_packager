@@ -9,6 +9,7 @@ author='Jeff Hykin'
 author_email='jeff.hykin@gmail.com'
 url='https://github.com/jeff-hykin/pure_python_packager'
 license = "MIT"
+main_module_path = "main/pure_python_packager"
 
 [[tool.extra.pure_python_packager]]
 path = "main/pure_python_packager"
