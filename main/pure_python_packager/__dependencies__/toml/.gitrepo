@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/uiri/toml
+	branch = master
+	commit = 5706d3155f4da8f3b84875f80bfe0dfc6565f61f
+	parent = a98177832a9cd71dfa111f610a3b40ec390b80f3
+	method = merge
+	cmdver = 0.4.1
