@@ -63,7 +63,7 @@ def remove(path):
 # 
 this_file = make_absolute_path(__file__)
 this_folder = dirname(this_file)
-dependency_mapping_path = join(this_folder, '__dependency_mapping__.json')
+settings_path = join(this_folder, '..', 'settings.json')
 
 # 
 # find closest import path
@@ -99,13 +99,18 @@ if best_import_zone_match is None:
 import json
 from os.path import join
 # ensure it exists
-if not isfile(dependency_mapping_path):
-    with open(dependency_mapping_path, 'w') as the_file:
+if not isfile(settings_path):
+    with open(settings_path, 'w') as the_file:
         the_file.write(str("{}"))
-with open(dependency_mapping_path, 'r') as in_file:
-    dependency_mapping = json.load(in_file)
-    if not isinstance(dependency_mapping, dict):
-        raise Exception(f"""\n\n\nThis file is corrupt (it should be a JSON object):{dependency_mapping_path}""")
+with open(settings_path, 'r') as in_file:
+    settings = json.load(in_file)
+    if not isinstance(settings, dict):
+        raise Exception(f"""\n\n\nThis file is corrupt (it should be a JSON object):{settings_path}""")
+
+# ensure that pure_python_imports exists
+if not isinstance(settings.get("pure_python_imports", None), dict):
+    settings["pure_python_imports"] = {}
+dependency_mapping = settings["pure_python_imports"]
 
 # 
 # calculate paths
@@ -116,7 +121,7 @@ import_strings = []
 for dependency_name, dependency_info in dependency_mapping.items():
     counter += 1
     if dependency_name.startswith("__"):
-        raise Exception(f"""dependency names cannot start with "__", but this one does: {dependency_name}. This source of that name is in: {dependency_mapping_path}""")
+        raise Exception(f"""dependency names cannot start with "__", but this one does: {dependency_name}. This source of that name is in: {settings_path}""")
     
     target_path = join(this_folder, dependency_info["path"])
     relative_target_path = make_relative_path(to=target_path, coming_from=best_import_zone_match)

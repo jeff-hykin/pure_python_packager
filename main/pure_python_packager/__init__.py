@@ -70,7 +70,7 @@ def add_dependency(project_directory, url, commit_or_tag=None, module_name=None,
         module_name = url_ending_name
     
     path_to_init = join(project_directory, "__dependencies__", "__init__.py")
-    path_to_dependency_map = join(project_directory, "__dependencies__", "__dependency_mapping__.json")
+    settings_path = join(project_directory, "settings.json")
     
     # create the __dependencies__/
     if not isdir(dirname(path_to_init)):
@@ -82,14 +82,21 @@ def add_dependency(project_directory, url, commit_or_tag=None, module_name=None,
             the_file.write(get_original_dependency_initer())
     
     # create the __dependencies__/__dependency_mapping__.json
-    if not isfile(path_to_dependency_map):
-        with open(path_to_dependency_map, 'w') as the_file:
+    import json
+    from os.path import join
+    # ensure it exists
+    if not isfile(settings_path):
+        with open(settings_path, 'w') as the_file:
             the_file.write(str("{}"))
-    with open(path_to_dependency_map, 'r') as in_file:
-        dependency_mapping = json.load(in_file)
-        if not isinstance(dependency_mapping, dict):
-            raise Exception(f"""\n\n\nThis file is corrupt (it should be a JSON object):{path_to_dependency_map}""")
-    
+    with open(settings_path, 'r') as in_file:
+        settings = json.load(in_file)
+        if not isinstance(settings, dict):
+            raise Exception(f"""\n\n\nThis file is corrupt (it should be a JSON object):{settings_path}""")
+
+    # ensure that pure_python_imports exists
+    if not isinstance(settings.get("pure_python_imports", None), dict):
+        settings["pure_python_imports"] = {}
+    dependency_mapping = settings["pure_python_imports"]
     repo_path = f"{url_ending_name}_{hash(f"{commit_or_tag}{url}")}"
     
     # TODO: git subrepo clone
@@ -119,8 +126,8 @@ def add_dependency(project_directory, url, commit_or_tag=None, module_name=None,
         "path": make_relative_path(to=main_module_path, coming_from=join(repo_path, "..")),
         "eval": extraction_eval or module_name,
     }
-    with open(path_to_dependency_map, 'w') as outfile:
-        json.dump(dependency_mapping, outfile, indent=default_indent)
+    with open(settings_path, 'w') as outfile:
+        json.dump(settings, outfile, indent=default_indent)
             
     # TODO: convert "from [self].thing1 import thing2" to "from .thing1 improt thing2" within the repo
 
