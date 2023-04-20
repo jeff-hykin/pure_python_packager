@@ -151,6 +151,8 @@ for dependency_name, dependency_info in dependency_mapping.items():
     counter += 1
     if dependency_name.startswith("__"):
         raise Exception(f"""dependency names cannot start with "__", but this one does: {dependency_name}. This source of that name is in: {settings_path}""")
+    if not dependency_name.isidentifier():
+        raise Exception(f"""dependency names must be an identifier ("blah".isidentifier() in python), but this one is not: {dependency_name}. This source of that name is in: {settings_path}""")
     
     target_path = join(this_folder, dependency_info["path"])
     relative_target_path = make_relative_path(to=target_path, coming_from=best_import_zone_match)
@@ -306,17 +308,8 @@ def file(path, globals=None):
     
     return module
 
+__all__ = []
 for dependency_name, dependency_info in dependency_mapping.items():
-    # need to change the module name to make it unique before importing
-    path_to_dependency = join(this_folder, dependency_name)
-    unqiue_name = f"{dependency_name}___{consistent_hash(path_to_dependency)}"
-    os.makedirs(join(this_folder, "__name_mapping__"), exist_ok=True)
-    path_with_unique_name = join(this_folder, "__name_mapping__", unqiue_name)
-    relative_target_path = join("..", dependency_info["path"])
-    # make sure the symlink exists
-    if not Path(path_with_unique_name).is_symlink() or final_target_of(path_with_unique_name) != relative_target_path:
-        # clear the way
-        remove(path_with_unique_name)
-        # symlink the folder
-        Path(path_with_unique_name).symlink_to(relative_target_path)
-    exec(f"{dependency_name} = file(path_with_unique_name)")
+    # this will register it with python and convert it to a proper module with a unique path (important for pickling things)
+    exec(f"""from .{dependency_name} import __file__ as _""")
+    __all__.append(dependency_name)
