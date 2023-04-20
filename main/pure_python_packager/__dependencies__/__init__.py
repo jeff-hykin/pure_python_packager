@@ -50,7 +50,7 @@ def path_pieces(path):
     return [ *folders, filename, file_extension ]
 
 def remove(path):
-    if os.path.isdir(path):
+    if not Path(path).is_symlink() and os.path.isdir(path):
         shutil.rmtree(path)
     else:
         try:
@@ -58,6 +58,17 @@ def remove(path):
         except:
             pass
 
+def final_target_of(path):
+    # resolve symlinks
+    if os.path.islink(path):
+        have_seen = set()
+        while os.path.islink(path):
+            path = os.readlink(path)
+            if path in have_seen:
+                return None # circular broken link
+            have_seen.add(path)
+    return path
+    
 # 
 # globals
 # 
@@ -107,10 +118,10 @@ with open(settings_path, 'r') as in_file:
     if not isinstance(settings, dict):
         raise Exception(f"""\n\n\nThis file is corrupt (it should be a JSON object):{settings_path}""")
 
-# ensure that pure_python_imports exists
-if not isinstance(settings.get("pure_python_imports", None), dict):
-    settings["pure_python_imports"] = {}
-dependency_mapping = settings["pure_python_imports"]
+# ensure that pure_python_packages exists
+if not isinstance(settings.get("pure_python_packages", None), dict):
+    settings["pure_python_packages"] = {}
+dependency_mapping = settings["pure_python_packages"]
 
 # 
 # calculate paths
@@ -130,7 +141,8 @@ for dependency_name, dependency_info in dependency_mapping.items():
     eval_part = dependency_info.get("eval", dependency_name)
     unique_name = f"{dependency_name}_{random()}_{counter}".replace(".","")
     target_folder_for_import = join(this_folder, dependency_name)
-    if exists(target_folder_for_import):
+    if not Path(target_folder_for_import).is_symlink() or final_target_of(target_folder_for_import) != dependency_info["path"]:
+        # clear the way
         remove(target_folder_for_import)
-    # symlink the folder
-    Path(target_folder_for_import).symlink_to(dependency_info["path"])
+        # symlink the folder
+        Path(target_folder_for_import).symlink_to(dependency_info["path"])
