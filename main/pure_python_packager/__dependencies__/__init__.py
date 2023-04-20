@@ -1,9 +1,10 @@
-import sys
-import os
-from os.path import isabs, isfile, isdir, join, dirname, basename, exists, splitext, relpath
 from os import remove, getcwd, makedirs, listdir, rename, rmdir, system
+from os.path import isabs, isfile, isdir, join, dirname, basename, exists, splitext, relpath, join, dirname
 from pathlib import Path
-from os.path import join, dirname
+import glob
+import os
+import shutil
+import sys
 import warnings
 
 # 
@@ -47,6 +48,15 @@ def path_pieces(path):
     *folders, file = folders
     filename, file_extension = os.path.splitext(file)
     return [ *folders, filename, file_extension ]
+
+def remove(path):
+    if os.path.isdir(path):
+        shutil.rmtree(path)
+    else:
+        try:
+            os.remove(path)
+        except:
+            pass
 
 # 
 # globals
@@ -114,22 +124,8 @@ for dependency_name, dependency_info in dependency_mapping.items():
     *path_parts, _, _ = path_pieces(join(relative_target_path, "_"))
     eval_part = dependency_info.get("eval", dependency_name)
     unique_name = f"{dependency_name}_{random()}_{counter}".replace(".","")
-    if os.path.isdir(target_path):
-        if all(each.isidentifier() for each in path_parts):
-            import_strings.append(f"import {'.'.join(path_parts)} as {unique_name};{dependency_name} = (lambda {dependency_name}: {eval_part})({unique_name})")
-        else:
-            warnings.warn(f"There's a dependency path that contains a name that is not acceptable as an identifier:\npath parts: {path_parts}")
-    else:
-        warnings.warn(f"There's a dependency path but it doesnt have the right folder structure. This path isn't a folder: {join(*path_parts)}")
-
-# 
-# do the actual importing
-#
-import_string = "\n".join(import_strings)
-try:
-    exec(import_string)
-except Exception as error:
-    print(error)
-    indented = import_string.replace('\n', '\n    ')
-    print(f"Issue while trying to run the following:\n    {indented}")
-    raise error
+    target_folder_for_import = join(this_folder, dependency_name)
+    if exists(target_folder_for_import):
+        remove(target_folder_for_import)
+    # symlink the folder
+    Path(target_folder_for_import).symlink_to(dependency_info["path"])
