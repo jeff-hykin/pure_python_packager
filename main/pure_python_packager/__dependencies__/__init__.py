@@ -168,6 +168,55 @@ for dependency_name, dependency_info in dependency_mapping.items():
 # import the paths
 __all__ = []
 for dependency_name, dependency_info in dependency_mapping.items():
+    # 
+    # attempt hash-based import (reduces duplication)
+    # 
+        # TODO: before enabling this, create an override system similar to deno scoping
+        
+        # # check for .gitrepo
+        # hash_value = None
+        # *folders, name, extension = path_pieces(dependency_info["path"])
+        # folders.append(f"{name}{extension}")
+        # while len(folders) > 0:
+        #     git_repo_info_path = join(*folders, ".gitrepo")
+        #     if isfile(git_repo_info_path):
+        #         with open(git_repo_info_path,'r') as f:
+        #             for each_line in f.readlines():
+        #                 each_line = each_line.strip()
+        #                 if each_line.startswith("commit = "):
+        #                     hash_value = each_line[len("commit = "):]
+        #                     break
+        #     if hash_value != None:
+        #         break
+        #     folders.pop()
+        
+        # if hash_value != None:
+        #     central_path = f"{Path.home()}/.cache/pure_python_packager/"
+        #     os.makedirs(central_path, exist_ok=True)
+        #     # need to change the module name to make it unique before importing
+        #     path_to_dependency = join(this_folder, dependency_name)
+        #     unqiue_name = f"{dependency_name}___{hash_value}"
+        #     path_with_unique_name = join(central_path, unqiue_name)
+        #     target_path = join(this_folder, dependency_info["path"])
+        #     # make sure the symlink exists
+        #     if not Path(path_with_unique_name).is_symlink():
+        #         # clear the way
+        #         remove(path_with_unique_name)
+        #         # symlink the folder
+        #         Path(path_with_unique_name).symlink_to(target_path)
+        #     sys.path.insert(0, central_path)
+        #     exec(f"import {unqiue_name} as {dependency_name}")
+        #     sys.path.pop(-1)
+        # else:
+            # normal relative import
+            
+            
+    # 
+    # link "$HOME/.cache/pure_python_packager/name_{commithash}" to source_path
+    # sys.path.insert(0, "$HOME/.cache/pure_python_packager")
+    # import {dependency_name}
+    # sys.path.pop(-1)(0, "$HOME/.cache/pure_python_packager")
+    
     # this will register it with python and convert it to a proper module with a unique path (important for pickling things)
     exec(f"""from .{dependency_name} import __file__ as _""")
     __all__.append(dependency_name)

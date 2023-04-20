@@ -1,0 +1,3 @@
+- switch to a central content-addressed system instead of heirarchy with duplication
+    - difficult part is figuring out how to get a hash for the local one, maybe check for .gitrepo and use the commithash
+    - will also probably need an override system
