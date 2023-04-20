@@ -13,6 +13,21 @@ starting_globals = dict(globals())
 # 
 # helpers
 # 
+from hashlib import md5 
+
+def consistent_hash(value):
+    if isinstance(value, bytes):
+        return md5(value).hexdigest()
+    
+    if isinstance(value, str):
+        return md5(("@"+value).encode('utf-8')).hexdigest()
+    
+    if isinstance(value, (bool, int, float, type(None))):
+        return md5(str(value).encode('utf-8')).hexdigest()
+        
+    else:
+        return md5(pickle.dumps(value, protocol=4)).hexdigest()
+
 def make_absolute_path(to, coming_from=None):
     # if coming from cwd, its easy
     if coming_from is None:
@@ -153,6 +168,8 @@ for dependency_name, dependency_info in dependency_mapping.items():
 # 
 # python-include
 # 
+
+
 import sys
 import os
 import inspect
@@ -255,6 +272,7 @@ def file(path, globals=None):
     if absolute_import_path in ___included_modules___ and type(___included_modules___) == ModuleClass:
         module_as_dict = ___included_modules___[absolute_import_path]
     else:
+        # FIXME: check for periods in the filename, as they will (proabably) be interpeted as sub-module attributes and break the import
         # get the python file name without the extension
         filename, file_extension = os.path.splitext(basename(absolute_import_path))
         # add a wrapper to the sys path, because modifying it directly would cause polltion/side effects
@@ -289,4 +307,16 @@ def file(path, globals=None):
     return module
 
 for dependency_name, dependency_info in dependency_mapping.items():
-    exec(f"{dependency_name} = file(join(this_folder, {repr(dependency_name)}))")
+    # need to change the module name to make it unique before importing
+    path_to_dependency = join(this_folder, dependency_name)
+    unqiue_name = f"{dependency_name}___{consistent_hash(path_to_dependency)}"
+    os.makedirs(join(this_folder, "__name_mapping__"), exist_ok=True)
+    path_with_unique_name = join(this_folder, "__name_mapping__", unqiue_name)
+    relative_target_path = join("..", dependency_info["path"])
+    # make sure the symlink exists
+    if not Path(path_with_unique_name).is_symlink() or final_target_of(path_with_unique_name) != relative_target_path:
+        # clear the way
+        remove(path_with_unique_name)
+        # symlink the folder
+        Path(path_with_unique_name).symlink_to(relative_target_path)
+    exec(f"{dependency_name} = file(path_with_unique_name)")

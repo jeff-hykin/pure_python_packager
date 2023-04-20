@@ -1,20 +1,16 @@
 {
     "pure_python_packages": {
         "file_system_py": {
-            "path": "__sources__/file_system_py/main/file_system_py",
-            "eval": "file_system_py"
+            "path": "__sources__/file_system_py/main/file_system_py"
         },
         "websockets": {
-            "path": "__sources__/websockets/src/websockets",
-            "eval": "websockets"
+            "path": "__sources__/websockets/src/websockets"
         },
         "super_hash": {
-            "path": "__sources__/super_hash/main/super_hash",
-            "eval": "super_hash"
+            "path": "__sources__/super_hash/main/super_hash"
         },
         "toml": {
-            "path": "__sources__/toml/toml",
-            "eval": "toml"
+            "path": "__sources__/toml/toml"
         }
     }
 }
