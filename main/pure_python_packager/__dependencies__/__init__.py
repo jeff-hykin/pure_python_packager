@@ -218,5 +218,13 @@ for dependency_name, dependency_info in dependency_mapping.items():
     # sys.path.pop(-1)(0, "$HOME/.cache/pure_python_packager")
     
     # this will register it with python and convert it to a proper module with a unique path (important for pickling things)
-    exec(f"""from .{dependency_name} import __file__ as _""")
-    __all__.append(dependency_name)
+    try:
+        exec(f"""from .{dependency_name} import __file__ as _""")
+        __all__.append(dependency_name)
+    except ImportError as error:
+        if f"{error}" == "ImportError: cannot import name '__file__'":
+            # this means top level folder isn't a module or doesnt have a __init__.py
+            # some modules simply are like this
+            pass
+        else:
+            raise error
