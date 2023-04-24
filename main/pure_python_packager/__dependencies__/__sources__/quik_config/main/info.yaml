@@ -1,0 +1,34 @@
+# NOTE: names in parentheses are special
+# all other names are not special
+(project):
+    # paths the code will probably need to use
+    (path_to):
+        this_file: "./info.yaml"
+    
+    # this is your local-machine config choices
+    # (should point to a file that is git-ignored)
+    # (this file will be auto-generated with the correct format)
+    (local_data): ./local_data.ignore.yaml
+    
+    # below are options that the config file can choose
+    #     when multiple options are selected
+    #     their keys/values will be merged recursively
+    (profiles):
+        (default):
+            mode: development
+            has_gpu: false
+            constants:
+                pi: 3 # its 'bout 3 
+        
+        PROD:
+            (inherit): [GPU]
+            mode: production
+            has_gpu: true
+            constants:
+                pi: 3.14159265358979
+        
+        DEV:
+            mode: development
+        
+        GPU:
+            has_gpu: true

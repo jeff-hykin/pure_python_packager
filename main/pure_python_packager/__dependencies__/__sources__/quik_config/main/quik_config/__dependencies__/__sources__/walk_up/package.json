@@ -1,0 +1,21 @@
+{
+  "name": "@!!!!!/walk-up",
+  "version": "1.0.0",
+  "description": "Find files in parent directories",
+  "main": "main/main.js",
+  "directories": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeff-hykin/walk_up.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jeff-hykin/walk_up/issues"
+  },
+  "homepage": "https://github.com/jeff-hykin/walk_up#readme"
+}

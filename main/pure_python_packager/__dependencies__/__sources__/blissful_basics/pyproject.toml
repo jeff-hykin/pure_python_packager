@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "blissful_basics"
+version = "0.2.27"
+description = "Tools I need in every python project"
+authors=[]
+
+[tool.extra]
+author='Jeff Hykin'
+author_email='jeff.hykin@gmail.com'
+url='https://github.com/jeff-hykin/blissful_basics.git'
+license = "MIT"
+main_module_path = "main/blissful_basics"
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.12"
+
+[tool.poetry.dev-dependencies]
+twine = "3.4.1"
+"keyrings.alt" = "4.0.2"
+toml = "^0.10.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

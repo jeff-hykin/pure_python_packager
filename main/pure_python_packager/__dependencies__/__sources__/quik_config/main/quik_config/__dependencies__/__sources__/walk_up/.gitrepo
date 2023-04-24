@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/jeff-hykin/walk_up
+	branch = master
+	commit = adce77bda623c361dad8b39e9aa46c319309b9f1
+	parent = 2ecf440bb45945a9afb14b9bc0ad56c271650d47
+	method = merge
+	cmdver = 0.4.1

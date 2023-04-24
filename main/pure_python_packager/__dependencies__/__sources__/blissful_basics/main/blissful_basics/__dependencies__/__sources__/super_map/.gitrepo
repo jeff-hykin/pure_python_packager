@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:jeff-hykin/super_map.git
+	branch = master
+	commit = 5b647b0c9fc0bf1683bb6795d7e1ccb072ee5946
+	parent = 7ce821769f51dda7733ed5bf205ff9300a197c7c
+	method = merge
+	cmdver = 0.4.1

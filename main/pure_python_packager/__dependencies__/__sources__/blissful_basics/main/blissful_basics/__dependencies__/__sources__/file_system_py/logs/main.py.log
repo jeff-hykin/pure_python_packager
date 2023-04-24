@@ -1,0 +1,13 @@
+testing
+*folders = ['/', 'this', 'is', 'a']
+name = filepath
+extension = .txt
+FS.basename things.log.ttxt
+FS.name things.log
+FS.extname .ttxt
+FS.without_ext ./logs/thing/things.log
+FS.without_any_ext ./logs/thing/things
+FS.list_paths_in []
+FS.list_basenames_in []
+FS.list_file_paths_in []
+FS.list_folder_paths_in []

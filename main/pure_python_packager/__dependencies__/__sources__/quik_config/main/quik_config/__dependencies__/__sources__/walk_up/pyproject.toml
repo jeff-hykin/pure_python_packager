@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "walk_up"
+version = "0.1.0"
+description = "Find files in parent directories"
+authors=[]
+
+[tool.extra]
+author='Jeff Hykin'
+author_email='jeff.hykin@gmail.com'
+url='https://github.com/jeff-hykin/walk_up'
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.10"
+pip = "20.1.1"
+
+[tool.poetry.dev-dependencies]
+twine = "3.4.1"
+"keyrings.alt" = "4.0.2"
+toml = "^0.10.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

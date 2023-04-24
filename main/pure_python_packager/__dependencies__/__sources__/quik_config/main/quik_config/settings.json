@@ -1,0 +1,13 @@
+{
+    "pure_python_packages": {
+        "walk_up": {
+            "path": "__sources__/walk_up/python/walk_up"
+        },
+        "super_map": {
+            "path": "__sources__/super_map/main/super_map"
+        },
+        "ez_yaml": {
+            "path": "__sources__/ez_yaml/main/ez_yaml"
+        }
+    }
+}

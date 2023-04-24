@@ -1,0 +1,14 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    gem-release (2.2.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler
+  gem-release
+
+BUNDLED WITH
+   2.1.4

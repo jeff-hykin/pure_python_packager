@@ -1,16 +1,50 @@
 {
     "pure_python_packages": {
+        "blissful_basics": {
+            "git_url": "git@github.com:jeff-hykin/blissful_basics.git",
+            "path": "__sources__/blissful_basics/main/blissful_basics"
+        },
+        "cool_cache": {
+            "git_url": "git@github.com:jeff-hykin/cool_cache.git",
+            "path": "__sources__/cool_cache/main/cool_cache"
+        },
+        "elegant_events": {
+            "git_url": "git@github.com:jeff-hykin/elegant_events.git",
+            "path": "__sources__/elegant_events/main/elegant_events"
+        },
+        "quik_config": {
+            "git_url": "git@github.com:jeff-hykin/quik_config_python.git",
+            "path": "__sources__/quik_config/main/quik_config"
+        },
+        "rigourous_recorder": {
+            "git_url": "git@github.com:jeff-hykin/rigourous_recorder.git",
+            "path": "__sources__/rigourous_recorder/main/rigourous_recorder"
+        },
         "file_system_py": {
+            "git_url": "git@github.com:jeff-hykin/file_system_py.git",
             "path": "__sources__/file_system_py/main/file_system_py"
+        },
+        "json_fix": {
+            "git_url": "git@github.com:jeff-hykin/json_fix.git",
+            "path": "__sources__/json_fix/main/json_fix"
+        },
+        "ez_yaml": {
+            "git_url": "git@github.com:jeff-hykin/ez_yaml.git",
+            "path": "__sources__/ez_yaml/main/ez_yaml"
         },
         "websockets": {
             "path": "__sources__/websockets/src/websockets"
         },
         "super_hash": {
+            "git_url": "git@github.com:jeff-hykin/super_hash.git",
             "path": "__sources__/super_hash/main/super_hash"
         },
         "toml": {
+            "git_url": "https://github.com/uiri/toml",
             "path": "__sources__/toml/toml"
+        },
+        "ruamel": {
+            "path": "__sources__/ruamel/"
         }
     }
 }

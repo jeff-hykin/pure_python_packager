@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/jeff-hykin/super_hash.git
+	branch = master
+	commit = ace238429ef50acc344f1c9f697d25ddfaa3701c
+	parent = b035f19e412926fd37ac4b9739775eb56117e714
+	method = merge
+	cmdver = 0.4.1
