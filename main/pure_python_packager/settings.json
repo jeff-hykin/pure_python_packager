@@ -16,9 +16,9 @@
             "git_url": "git@github.com:jeff-hykin/quik_config_python.git",
             "path": "__sources__/quik_config/main/quik_config"
         },
-        "rigourous_recorder": {
-            "git_url": "git@github.com:jeff-hykin/rigourous_recorder.git",
-            "path": "__sources__/rigourous_recorder/main/rigourous_recorder"
+        "rigorous_recorder": {
+            "git_url": "git@github.com:jeff-hykin/rigorous_recorder.git",
+            "path": "__sources__/rigorous_recorder/main/rigorous_recorder"
         },
         "file_system_py": {
             "git_url": "git@github.com:jeff-hykin/file_system_py.git",
