@@ -7,6 +7,7 @@ import sys
 import warnings # TODO: convert serveral prints to warnings
 from hashlib import md5 
 
+is_windows = os.name == 'nt'
 # 
 # helpers
 # 
@@ -153,76 +154,31 @@ for dependency_name, dependency_info in dependency_mapping.items():
     relative_target_path = make_relative_path(to=target_path, coming_from=best_import_zone_match)
     # ensure the parent folder
     *path_parts, _, _ = path_pieces(join(relative_target_path, "_"))
-    eval_part = dependency_info.get("eval", dependency_name)
     unique_name = f"{dependency_name}_{random()}_{counter}".replace(".","")
     target_folder_for_import = join(this_folder, dependency_name)
-    source_path = dependency_info["path"]
-    if not exists(source_path):
-        raise Exception(f'''\n\n\nThe {dependency_name} module has a path of {repr(source_path)}\nHowever, that path is empty so I can't really import it\n(Note: that path is defined inside of {repr(settings_path)})''')
-    if not Path(target_folder_for_import).is_symlink() or final_target_of(target_folder_for_import) != source_path:
-        # clear the way
+    
+    target_path_obj = Path(target_folder_for_import)
+    if is_windows:
+        if not target_path_obj.exists():
+            # windows has to copy the files because it can't symlink
+            if os.path.isdir(target_path):
+                shutil.copytree(target_path, target_folder_for_import)
+            else:
+                shutil.copy(target_path, target_folder_for_import)
+    elif not target_path_obj.is_symlink() or final_target_of(target_folder_for_import) != dependency_info["path"]:
+        # clear the way (encase something was in the way)
         remove(target_folder_for_import)
-        # symlink the folder
-        Path(target_folder_for_import).symlink_to(source_path)
-
+        target_path_obj.symlink_to(dependency_info["path"])
+        
 # import the paths
 __all__ = []
 for dependency_name, dependency_info in dependency_mapping.items():
-    # 
-    # attempt hash-based import (reduces duplication)
-    # 
-        # TODO: before enabling this, create an override system similar to deno scoping
-        
-        # # check for .gitrepo
-        # hash_value = None
-        # *folders, name, extension = path_pieces(dependency_info["path"])
-        # folders.append(f"{name}{extension}")
-        # while len(folders) > 0:
-        #     git_repo_info_path = join(*folders, ".gitrepo")
-        #     if isfile(git_repo_info_path):
-        #         with open(git_repo_info_path,'r') as f:
-        #             for each_line in f.readlines():
-        #                 each_line = each_line.strip()
-        #                 if each_line.startswith("commit = "):
-        #                     hash_value = each_line[len("commit = "):]
-        #                     break
-        #     if hash_value != None:
-        #         break
-        #     folders.pop()
-        
-        # if hash_value != None:
-        #     central_path = f"{Path.home()}/.cache/pure_python_packager/"
-        #     os.makedirs(central_path, exist_ok=True)
-        #     # need to change the module name to make it unique before importing
-        #     path_to_dependency = join(this_folder, dependency_name)
-        #     unqiue_name = f"{dependency_name}___{hash_value}"
-        #     path_with_unique_name = join(central_path, unqiue_name)
-        #     target_path = join(this_folder, dependency_info["path"])
-        #     # make sure the symlink exists
-        #     if not Path(path_with_unique_name).is_symlink():
-        #         # clear the way
-        #         remove(path_with_unique_name)
-        #         # symlink the folder
-        #         Path(path_with_unique_name).symlink_to(target_path)
-        #     sys.path.insert(0, central_path)
-        #     exec(f"import {unqiue_name} as {dependency_name}")
-        #     sys.path.pop(-1)
-        # else:
-            # normal relative import
-            
-            
-    # 
-    # link "$HOME/.cache/pure_python_packager/name_{commithash}" to source_path
-    # sys.path.insert(0, "$HOME/.cache/pure_python_packager")
-    # import {dependency_name}
-    # sys.path.pop(-1)(0, "$HOME/.cache/pure_python_packager")
-    
     # this will register it with python and convert it to a proper module with a unique path (important for pickling things)
     try:
         exec(f"""from .{dependency_name} import __file__ as _""")
         __all__.append(dependency_name)
     except ImportError as error:
-        if f"{error}" == "ImportError: cannot import name '__file__'":
+        if f"{error}" == "cannot import name '__file__'":
             # this means top level folder isn't a module or doesnt have a __init__.py
             # some modules simply are like this
             pass
