@@ -24,6 +24,10 @@
             "git_url": "git@github.com:jeff-hykin/file_system_py.git",
             "path": "__sources__/file_system_py/main/file_system_py"
         },
+        "grug_test": {
+            "git_url": "git@github.com:jeff-hykin/grug_test_py.git",
+            "path": "__sources__/grug_test_py/main/grug_test"
+        },
         "informative_iterator": {
             "git_url": "git@github.com:jeff-hykin/informative-iterator.git",
             "path": "__sources__/informative_iterator/main/informative_iterator"
