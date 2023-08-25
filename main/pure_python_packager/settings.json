@@ -24,6 +24,10 @@
             "git_url": "git@github.com:jeff-hykin/file_system_py.git",
             "path": "__sources__/file_system_py/main/file_system_py"
         },
+        "informative_iterator": {
+            "git_url": "git@github.com:jeff-hykin/informative-iterator.git",
+            "path": "__sources__/informative_iterator/main/informative_iterator"
+        },
         "json_fix": {
             "git_url": "git@github.com:jeff-hykin/json_fix.git",
             "path": "__sources__/json_fix/main/json_fix"
